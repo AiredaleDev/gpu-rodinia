@@ -13,6 +13,7 @@ OCL_DIRS  := backprop bfs cfd gaussian heartwall hotspot kmeans lavaMD leukocyte
 all: CUDA OMP OPENCL
 
 CUDA: 
+	mkdir -p $(CUDA_BIN_DIR)
 	cd cuda/backprop;		make;	cp backprop $(CUDA_BIN_DIR)
 	cd cuda/bfs;			make;	cp bfs $(CUDA_BIN_DIR)
 	cd cuda/cfd;			make;	cp euler3d euler3d_double pre_euler3d pre_euler3d_double $(CUDA_BIN_DIR)
@@ -36,6 +37,7 @@ CUDA:
 	
 	
 OMP:
+	mkdir -p $(OMP_BIN_DIR)
 	cd openmp/backprop;				make;	cp backprop $(OMP_BIN_DIR)
 	cd openmp/bfs;					make;	cp bfs $(OMP_BIN_DIR)
 	cd openmp/cfd;					make;	cp euler3d_cpu euler3d_cpu_double pre_euler3d_cpu pre_euler3d_cpu_double $(OMP_BIN_DIR)
@@ -55,6 +57,7 @@ OMP:
 	cd openmp/mummergpu;				make;	cp bin/mummergpu $(OMP_BIN_DIR)
 
 OPENCL:
+	mkdir -p $(OPENCL_BIN_DIR)
 	cd opencl/backprop;			make;	cp backprop     $(OPENCL_BIN_DIR)
 	cd opencl/bfs;				make;	cp bfs		$(OPENCL_BIN_DIR)
 	cd opencl/b+tree;			make;	cp b+tree	$(OPENCL_BIN_DIR)
@@ -79,13 +82,13 @@ OPENCL:
 clean: CUDA_clean OMP_clean OCL_clean
 
 CUDA_clean:
-	cd $(CUDA_BIN_DIR); rm -f *
+	rm -rf $(CUDA_BIN_DIR)
 	for dir in $(CUDA_DIRS) ; do cd cuda/$$dir ; make clean ; cd ../.. ; done
 	
 OMP_clean:
-	cd $(OMP_BIN_DIR); rm -f *
+	rm -rf $(OMP_BIN_DIR)
 	for dir in $(OMP_DIRS) ; do cd openmp/$$dir ; make clean ; cd ../.. ; done
 
 OCL_clean:
-	cd $(OPENCL_BIN_DIR); rm -f *
+	rm -rf $(OPENCL_BIN_DIR)
 	for dir in $(OCL_DIRS) ; do cd opencl/$$dir ; make clean ; cd ../.. ; done
