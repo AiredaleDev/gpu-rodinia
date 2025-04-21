@@ -172,13 +172,14 @@ kmeansCuda(float  **feature,				/* in: [npoints][nfeatures] */
     cudaTextureDesc texDesc;
     memset(&texDesc, 0, sizeof(texDesc));
     texDesc.readMode = cudaReadModeElementType;
+    texDesc.normalizedCoords = false;
 
     cudaTextureObject_t t_features;
     cudaCreateTextureObject(&t_features, &resDesc, &texDesc, NULL);
 
     memset(&resDesc, 0, sizeof(resDesc));
     resDesc.resType = cudaResourceTypeLinear;
-    resDesc.res.linear.devPtr = feature_d;
+    resDesc.res.linear.devPtr = feature_flipped_d;
     resDesc.res.linear.desc.f = cudaChannelFormatKindFloat;
     resDesc.res.linear.desc.x = 32; // bits per channel
     resDesc.res.linear.sizeInBytes = npoints*nfeatures*sizeof(float);
@@ -191,13 +192,14 @@ kmeansCuda(float  **feature,				/* in: [npoints][nfeatures] */
 
     memset(&resDesc, 0, sizeof(resDesc));
     resDesc.resType = cudaResourceTypeLinear;
-    resDesc.res.linear.devPtr = feature_d;
+    resDesc.res.linear.devPtr = clusters_d;
     resDesc.res.linear.desc.f = cudaChannelFormatKindFloat;
     resDesc.res.linear.desc.x = 32; // bits per channel
     resDesc.res.linear.sizeInBytes = nclusters*nfeatures*sizeof(float);
 
     memset(&texDesc, 0, sizeof(texDesc));
     texDesc.readMode = cudaReadModeElementType;
+    texDesc.normalizedCoords = false;
 
     cudaTextureObject_t t_clusters;
     cudaCreateTextureObject(&t_clusters, &resDesc, &texDesc, NULL);

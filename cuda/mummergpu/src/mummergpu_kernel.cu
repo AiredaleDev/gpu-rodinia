@@ -127,6 +127,7 @@
 #define SHIFT_QUERIES(queries, qryAddr) queries += qryAddr
 #endif
 
+#if NODETEX
 #if REORDER_TREE
 texture<uint4, 2, cudaReadModeElementType> nodetex;
 texture<uint4, 2, cudaReadModeElementType> childrentex;
@@ -143,6 +144,7 @@ texture<char, 1, cudaReadModeElementType> reftex;
 #endif
 
 texture<char, 1, cudaReadModeElementType> qrytex;
+#endif
 
  struct __align__(8) _MatchCoord
  {
@@ -350,7 +352,8 @@ __device__ char rc(char c)
 /// getNode
 //////////////////////////////////
 
-__device__ uint4 getNode(unsigned int cur, 
+__device__ uint4 getNode(
+		          unsigned int cur, 
                           bool use_two_level
 #if !NODETEX
                           , _PixelOfNode* nodes
@@ -372,9 +375,9 @@ __device__ uint4 getNode(unsigned int cur,
 
 #if NODETEX
 #if REORDER_TREE
-  return tex2D(nodetex, cur & 0x0000FFFF, (cur & 0xFFFF0000) >> 16);
+  return tex2D<uint4>(nodetex, cur & 0x0000FFFF, (cur & 0xFFFF0000) >> 16);
 #else
-  return tex1Dfetch(nodetex, cur);
+  return tex1Dfetch<uint4>(nodetex, cur);
 #endif
 
 #else

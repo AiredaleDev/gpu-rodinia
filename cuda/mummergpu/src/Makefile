@@ -70,7 +70,7 @@ CFLAGS    := -m64 $(CWARN_FLAGS)
 
 # Common flags
 COMMONFLAGS ?= 
-COMMONFLAGS += $(INCLUDES) -DUNIX
+COMMONFLAGS += $(INCLUDES) -DUNIX -DTREETEX=0
 
 # Debug/release configuration
 ifeq ($(dbg),1)
